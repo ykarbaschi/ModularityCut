@@ -104,10 +104,9 @@ public class ModularityMeasure {
 
             Map<Integer, Track> tracksWithCurrentID = new HashMap<>();
 
-            for (Map.Entry<Integer, Track> entry : tracks_All.entrySet()) {
-                if (entry.getValue().getGroup() == currentGroupID)
-                    tracksWithCurrentID.put(entry.getKey(), entry.getValue());
-            }
+            tracks_All.entrySet().stream()
+                                .filter(entry -> entry.getValue().getGroup() == currentGroupID)
+                                .forEach(entry -> tracksWithCurrentID.put(entry.getKey(), entry.getValue()));
 
             evaluateDivideSubGraph(modularityMatrix_All, tracksWithCurrentID);
         }

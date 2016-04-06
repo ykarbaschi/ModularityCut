@@ -1,8 +1,5 @@
 package modularityCut;
 
-import Jama.Matrix;
-import com.sun.org.apache.xpath.internal.operations.Mod;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
