@@ -13,17 +13,17 @@ public class SocialGraphTest {
     SocialGraph socialGraph;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         socialGraph = new SocialGraph();
     }
 
     @Test
-    public void canary(){
+    public void canary() {
         assertTrue(true);
     }
 
     @Test
-    public void getTwoTracksWithStartAndEndTimeThenCalculateWeightsOfTheEdge(){
+    public void getTwoTracksWithStartAndEndTimeThenCalculateWeightsOfTheEdge() {
         Tracks2D trackA = new Tracks2D();
         trackA.addPointData(new Point2D(1, 1, 1));
         trackA.addPointData(new Point2D(2, 2, 2));
@@ -40,7 +40,7 @@ public class SocialGraphTest {
     }
 
     @Test
-    public void getFourTracksOfPeopleAndCreateAnAdjMatrix(){
+    public void getFourTracksOfPeopleAndCreateAnAdjMatrix() {
 
         Tracks2D trackA = new Tracks2D();
         trackA.addPointData(new Point2D(1, 1, 1));
@@ -63,14 +63,19 @@ public class SocialGraphTest {
         trackD.addPointData(new Point2D(36, 33, 6));
 
         ArrayList<Track> tracks = new ArrayList<>();
-        tracks.add(trackA); tracks.add(trackB); tracks.add(trackC); tracks.add(trackD);
+        tracks.add(trackA);
+        tracks.add(trackB);
+        tracks.add(trackC);
+        tracks.add(trackD);
         double[][] adjMatrix = socialGraph.createAdjacencyMatrix(tracks);
-        assertEquals(1, adjMatrix[0][0],0);
-        assertTrue(adjMatrix[0][3] == adjMatrix[3][0]);
+
+        for (double[] weightRow : adjMatrix)
+            for (double weight : weightRow)
+                assertTrue(weight < 1 && weight > 0);
     }
 
     @Test
-    public void getATrackWithOnePointAndCreateAdjMatrix(){
+    public void getATrackWithOnePointAndCreateAdjMatrix() {
         Tracks2D trackA = new Tracks2D();
         trackA.addPointData(new Point2D(1, 1, 1));
         trackA.addPointData(new Point2D(2, 2, 2));
@@ -79,21 +84,21 @@ public class SocialGraphTest {
         ArrayList<Track> tracks = new ArrayList();
         tracks.add(trackA);
         double[][] matrix = socialGraph.createAdjacencyMatrix(tracks);
-        assertEquals(1, matrix[0][0],0);
+        assertEquals(1, matrix[0][0], 0);
     }
 
     @Test
-    public void sendEmptyListToCalculateAdjacencyMatrix(){
+    public void sendEmptyListToCalculateAdjacencyMatrix() {
         ArrayList<Track> tracks = new ArrayList();
-        try{
+        try {
             socialGraph.createAdjacencyMatrix(tracks);
             fail("List is Empty");
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 
     @Test
-    public void getAdjMatrixAndCalculateTotalConnectionStrength(){
+    public void getAdjMatrixAndCalculateTotalConnectionStrength() {
 
         Tracks2D trackA = new Tracks2D();
         trackA.addPointData(new Point2D(1, 1, 1));
@@ -115,7 +120,10 @@ public class SocialGraphTest {
         trackD.addPointData(new Point2D(24, 26, 5));
         trackD.addPointData(new Point2D(36, 33, 6));
         ArrayList<Track> tracks = new ArrayList();
-        tracks.add(trackA); tracks.add(trackB); tracks.add(trackC); tracks.add(trackD);
+        tracks.add(trackA);
+        tracks.add(trackB);
+        tracks.add(trackC);
+        tracks.add(trackD);
         double[][] adjMatrix = socialGraph.createAdjacencyMatrix(tracks);
 
         List<Double> totalConnectionStrength = socialGraph.calculateTotalConnectionStrength(adjMatrix);
@@ -123,7 +131,7 @@ public class SocialGraphTest {
     }
 
     @Test
-    public void getAdjMatrixAndCalculateTotalMatrixStrength(){
+    public void getAdjMatrixAndCalculateTotalMatrixStrength() {
         Tracks2D trackA = new Tracks2D();
         trackA.addPointData(new Point2D(1, 1, 1));
         trackA.addPointData(new Point2D(2, 2, 2));
@@ -144,7 +152,10 @@ public class SocialGraphTest {
         trackD.addPointData(new Point2D(24, 26, 5));
         trackD.addPointData(new Point2D(36, 33, 6));
         ArrayList<Track> tracks = new ArrayList();
-        tracks.add(trackA); tracks.add(trackB); tracks.add(trackC); tracks.add(trackD);
+        tracks.add(trackA);
+        tracks.add(trackB);
+        tracks.add(trackC);
+        tracks.add(trackD);
         double[][] adjMatrix = socialGraph.createAdjacencyMatrix(tracks);
 
         double totalMatrixStrength = socialGraph.calculateTotalMatrixStrength(adjMatrix);
@@ -153,7 +164,7 @@ public class SocialGraphTest {
     }
 
     @Test
-    public void getAdjMatrixAndOtherParamsCalculateModularityMatrixBij(){
+    public void getAdjMatrixAndOtherParamsCalculateModularityMatrixBij() {
         Tracks2D trackA = new Tracks2D();
         trackA.addPointData(new Point2D(1, 1, 1));
         trackA.addPointData(new Point2D(2, 2, 2));
@@ -174,7 +185,10 @@ public class SocialGraphTest {
         trackD.addPointData(new Point2D(24, 26, 5));
         trackD.addPointData(new Point2D(36, 33, 6));
         ArrayList<Track> tracks = new ArrayList();
-        tracks.add(trackA); tracks.add(trackB); tracks.add(trackC); tracks.add(trackD);
+        tracks.add(trackA);
+        tracks.add(trackB);
+        tracks.add(trackC);
+        tracks.add(trackD);
         double[][] adjMatrix = socialGraph.createAdjacencyMatrix(tracks);
 
         List<Double> totalConnectionStrength = socialGraph.calculateTotalConnectionStrength(adjMatrix);

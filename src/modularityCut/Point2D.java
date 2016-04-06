@@ -1,6 +1,6 @@
 package modularityCut;
 
-public class Point2D extends TrackPoint{
+public class Point2D implements TrackPoint{
     private double X;
     private double Y;
     private int frame;

@@ -7,7 +7,9 @@ import java.util.Map;
 
 public class SocialGraph {
 
-    public Map<Integer, Track> readData(){return new HashMap<>();}
+    public Map<Integer, Track> readData() {
+        return new HashMap<>();
+    }
 
     public ArrayList<Track> convertToList(Map<Integer, Track> tracks) {
         // only for making an ordered List for all members in a map
@@ -23,7 +25,6 @@ public class SocialGraph {
 
         if (tracks.size() == 0) throw new IllegalArgumentException("Map is Empty, Couldn't create Adj Matrix");
 
-        System.out.println("***YASER..Correct Standard Deviation in denominator For Weights Calculation");
         int sizeOfAdjMatrix = tracks.size();
         double[][] AdjMatrix = new double[sizeOfAdjMatrix][sizeOfAdjMatrix];
 
@@ -53,22 +54,46 @@ public class SocialGraph {
             throw new IllegalArgumentException("Both of the Tracks should have at least one point");
         }
 
+        List<Double> distances = new ArrayList<>();
+        double tempDistance;
         double upperDivision = 0;
         for (int i = 0; i < trackA.length(); i++) {
             for (int j = 0; j < trackB.length(); j++) {
                 if (trackA.getPointData(i).getFrame() == trackB.getPointData(j).getFrame()) {
-                    // in next line I should change... have a method to get the difference for location because
-                    // maybe the data may change from 2D to 3D and I dont want to change other class each time the
-                    // format of data changed
+                    // I added tempDistance and List distances to calculate Variance using them later.
+                    tempDistance = trackA.getDifferenceOfPosition(trackB, i, j);
+                    distances.add(tempDistance);
 
-                    // I will add a method in TrackPoint to calculate difference for each two point
-                    System.out.println("check the formula to calculate the difference");
+                    // next line is used to be:
+                    // upperDivision = upperDivision + Math.pow((trackA.getDifferenceOfPosition(trackB, i, j)), 2)
+                    // but I deleted power 2. because we calculated the distance between two location using euclidean
 
-                    upperDivision = upperDivision + Math.pow((trackA.getDifferenceOfPosition(trackB, i, j)), 2);
+                    upperDivision = upperDivision + tempDistance;
                 }
             }
         }
-        return Math.exp(-upperDivision);
+
+        // weight according to the paper
+        return Math.exp(-upperDivision / 2 * getVariance(distances));
+    }
+
+    private double getMean(List<Double> data) {
+        double sum = 0.0;
+
+        for(double a : data)
+            sum += a;
+
+        return sum / data.size();
+    }
+
+    private double getVariance(List<Double> data) {
+        double mean = getMean(data);
+        double temp = 0;
+
+        for(double a :data)
+            temp += Math.pow(mean - a, 2);
+
+        return temp / data.size();
     }
 
     public List<Double> calculateTotalConnectionStrength(double[][] adjMatrix) {

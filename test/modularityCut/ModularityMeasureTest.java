@@ -52,18 +52,4 @@ public class ModularityMeasureTest {
         modularityMatrix = socialGraph.calculateModularityMatrix(adjMatrix,
                 totalConnectionStrength, totalMatrixStrength);
     }
-
-    @Test
-    public void getModularityMatrixAndCalculateEigenValues() {
-        double[] eigenValues = modularityMeasure.getEigenValues(modularityMatrix);
-
-        assertEquals(0.9999999999999993, eigenValues[2], 0);
-    }
-
-    @Test
-    public void getModularityMatrixAndCalculateMaximumModularity(){
-        double maximumModularity = modularityMeasure.getMaximumModularity(modularityMatrix, totalMatrixStrength);
-
-        assertTrue(maximumModularity != 0);
-    }
 }

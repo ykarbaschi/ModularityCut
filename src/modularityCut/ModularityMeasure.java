@@ -10,7 +10,7 @@ public class ModularityMeasure {
     SocialGraph socialGraph = new SocialGraph();
     private static Matrix bigS;
     ArrayList<Matrix> All_S;
-    private static double Qmax;
+    private static double Q_max;
     private static int LastAssignedGroup = 0;
     private static Queue<Integer> uncheckedGroups;
     private static int currentGroupID;
@@ -20,39 +20,6 @@ public class ModularityMeasure {
         tracks_All = tracks;
         uncheckedGroups = new PriorityQueue<>();
         All_S = new ArrayList<>();
-    }
-
-    public double[] getEigenValues(double[][] modularityMatrix) {
-        Matrix modularity = new Matrix(modularityMatrix);
-        EigenvalueDecomposition EigenOfModularity = new EigenvalueDecomposition(modularity);
-        return EigenOfModularity.getRealEigenvalues();
-    }
-
-    public double getMaximumModularity(double[][] modularityMatrix, double totalMatrixStrength) {
-        Matrix modularity = new Matrix(modularityMatrix);
-        EigenvalueDecomposition EigenOfModularity = new EigenvalueDecomposition(modularity);
-
-        Matrix eigenVector = EigenOfModularity.getV();
-        int indexOfMaximum = getIndexOfMaximumEigenValue(EigenOfModularity.getRealEigenvalues());
-
-        double[] eigenValues = EigenOfModularity.getRealEigenvalues();
-
-        Matrix dominantEigenVector = eigenVector.getMatrix(0, eigenVector.getColumnDimension() - 1,
-                indexOfMaximum, indexOfMaximum);
-
-        Matrix labelVectorOfDominantEigenVector = calculateLabelVector(dominantEigenVector);
-
-        //Look at the paper Equation 15...
-        double sigmaOfAllEigenValuesAndEigenVector = 0;
-        for (int i = 0; i < eigenVector.getColumnDimension(); i++) {
-            Matrix eigenVector_i = eigenVector.getMatrix(0, eigenVector.getColumnDimension() - 1,
-                    i, i);
-            sigmaOfAllEigenValuesAndEigenVector = sigmaOfAllEigenValuesAndEigenVector +
-                    Math.pow((eigenVector_i.times(labelVectorOfDominantEigenVector)).get(0, 0), 2) *
-                            eigenValues[indexOfMaximum];
-        }
-
-        return sigmaOfAllEigenValuesAndEigenVector / 4 * totalMatrixStrength;
     }
 
     private Matrix calculateLabelVector(Matrix EigenVector) {
@@ -92,8 +59,8 @@ public class ModularityMeasure {
 
         bigS = new Matrix(modularityMatrix_All.getColumnDimension(), 1, 1);
 
-        // for first time Qmax = Tr(S_t * B * S)
-        Qmax = (((bigS.transpose()).times(modularityMatrix_All)).times(bigS)).trace();
+        // for first time Q_max = Tr(S_t * B * S)
+        Q_max = (((bigS.transpose()).times(modularityMatrix_All)).times(bigS)).trace();
 
         uncheckedGroups.add(LastAssignedGroup);
 
@@ -133,10 +100,10 @@ public class ModularityMeasure {
 
         double new_Q = calculateNewQ(newBigS, modularityMatrix_all);
 
-        if (new_Q - Qmax > 0) {
+        if (new_Q - Q_max > 0) {
             All_S.add(newBigS);
             bigS = newBigS;
-            Qmax = new_Q;
+            Q_max = new_Q;
             LastAssignedGroup++;
             uncheckedGroups.add(currentGroupID);
             uncheckedGroups.add(LastAssignedGroup);

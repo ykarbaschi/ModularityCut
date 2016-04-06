@@ -20,6 +20,8 @@ public class Tracks2D implements Track {
 
     @Override
     public double getDifferenceOfPosition(Track secondTrack, int indexOfFirst, int indexOfSecond) {
+
+        // Euclidean distance...
         double diffOfXs = Math.pow(this.getPointData(indexOfFirst).getX() -
                 secondTrack.getPointData(indexOfSecond).getX(), 2);
         double diffOfYs = Math.pow(this.getPointData(indexOfFirst).getY() -
