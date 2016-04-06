@@ -13,7 +13,7 @@ public class MCT_Challenge_Data extends SocialGraph {
     @Override
     public Map<Integer, Track> readData() {
         try {
-            lines = Files.readAllLines(new File("MCT_Challenge//annotation//Dataset1//Cam2.dat")
+            lines = Files.readAllLines(new File("MCT_Challenge//annotation//Dataset1//Cam1.dat")
                     .toPath()).toArray(new String[0]);
         } catch (IOException e) {
             System.out.println(e.getMessage());

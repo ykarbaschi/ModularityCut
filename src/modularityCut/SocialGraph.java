@@ -31,9 +31,11 @@ public class SocialGraph {
         for (int i = 0; i < sizeOfAdjMatrix; i++) {
             for (int j = 0; j < sizeOfAdjMatrix; j++) {
 
-                if (AdjMatrix[i][j] == 0 && haveOverlap(tracks.get(i), tracks.get(j))) {
+                if(i == j)
+                    AdjMatrix[i][j] = 1;
+                else if (AdjMatrix[i][j] == 0 && haveOverlap(tracks.get(i), tracks.get(j))) {
 
-                    AdjMatrix[i][j] = calculateWeight(tracks.get(i), tracks.get(j), 1);
+                    AdjMatrix[i][j] = calculateWeight(tracks.get(i), tracks.get(j));
                     AdjMatrix[j][i] = AdjMatrix[i][j];
                 }
             }
@@ -48,7 +50,7 @@ public class SocialGraph {
         else return false;
     }
 
-    public double calculateWeight(Track trackA, Track trackB, double scaleFactor) {
+    public double calculateWeight(Track trackA, Track trackB) {
 
         if (trackA.length() == 0 || trackB.length() == 0) {
             throw new IllegalArgumentException("Both of the Tracks should have at least one point");
@@ -74,7 +76,7 @@ public class SocialGraph {
         }
 
         // weight according to the paper
-        return Math.exp(-upperDivision / 2 * getVariance(distances));
+        return Math.exp( -1 * upperDivision / (2 * getVariance(distances)));
     }
 
     private double getMean(List<Double> data) {

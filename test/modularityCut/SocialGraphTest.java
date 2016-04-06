@@ -33,8 +33,8 @@ public class SocialGraphTest {
         trackB.addPointData(new Point2D(1, 3, 2));
         trackB.addPointData(new Point2D(4, 2, 3));
         trackB.addPointData(new Point2D(5, 3, 4));
-        double scaleFactor = 1;
-        double result = socialGraph.calculateWeight(trackA, trackB, scaleFactor);
+
+        double result = socialGraph.calculateWeight(trackA, trackB);
 
         assertEquals(0.018315638888734165, result, 0);
     }
