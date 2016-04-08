@@ -129,6 +129,7 @@ public class ModularityMeasure {
 
         ListOfTracks = socialGraph.convertToList(tracks_All);
 
+        // number of column is tempLastGroup + 1 since 0 is the first column
         Matrix newS = new Matrix(ListOfTracks.size(), tempLastGroup + 1, 0);
 
         for (int i = 0; i < ListOfTracks.size(); i++) {

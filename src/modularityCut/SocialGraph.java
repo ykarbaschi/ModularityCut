@@ -128,7 +128,7 @@ public class SocialGraph {
         for (int i = 0; i < adjMatrix.length; i++) {
             for (int j = 0; j < adjMatrix.length; j++) {
                 modularityMatrix[i][j] = adjMatrix[i][j] -
-                        (totalConnectionStrength.get(i) * totalConnectionStrength.get(j)) / 2 * totalMatrixStrength;
+                        (totalConnectionStrength.get(i) * totalConnectionStrength.get(j)) / (2 * totalMatrixStrength);
             }
         }
         return modularityMatrix;
