@@ -39,7 +39,7 @@ public class ModularityMeasureTest {
         trackD.addPointData(new Point2D(54, 24, 4));
         trackD.addPointData(new Point2D(24, 26, 5));
         trackD.addPointData(new Point2D(36, 33, 6));
-        Map<Integer, Track> tracks = new HashMap<>();
+        HashMap<Integer, Track> tracks = new HashMap<>();
         tracks.put(0, trackA); tracks.put(1, trackB); tracks.put(2, trackC); tracks.put(3, trackD);
 
         double[][] adjMatrix = socialGraph.createAdjacencyMatrix(socialGraph.convertToList(tracks));

@@ -72,10 +72,11 @@ public class ModularityMeasure {
             Map<Integer, Track> tracksWithCurrentID = new HashMap<>();
 
             tracks_All.entrySet().stream()
-                                .filter(entry -> entry.getValue().getGroup() == currentGroupID)
-                                .forEach(entry -> tracksWithCurrentID.put(entry.getKey(), entry.getValue()));
+                    .filter(entry -> entry.getValue().getGroup() == currentGroupID)
+                    .forEach(entry -> tracksWithCurrentID.put(entry.getKey(), entry.getValue()));
 
-            evaluateDivideSubGraph(modularityMatrix_All, tracksWithCurrentID);
+            if (tracksWithCurrentID.size() > 1)
+                evaluateDivideSubGraph(modularityMatrix_All, tracksWithCurrentID);
         }
 
         return All_S;
@@ -94,7 +95,13 @@ public class ModularityMeasure {
 
         // we have to keep a copy of tracks_All before changing it
         //and roll back if the group was not good.
-        Map<Integer, Track> beforeChangeGroup = tracks_All;
+
+        Map<Integer, Track> beforeChangeGroup = new HashMap<>();
+        for (Map.Entry<Integer, Track> entry:tracks_All.entrySet())
+            beforeChangeGroup.put(entry.getKey(), new Tracks2D(entry.getValue().getID(), entry.getValue().getGroup()));
+
+        //Map<Integer, Track> beforeChangeGroup = new HashMap<>();
+        //beforeChangeGroup.putAll(tracks_All);
 
         Matrix newBigS = updateBigS(labelVectorOfDominantEigenVector, tracksWithCurrentID);
 
@@ -107,8 +114,13 @@ public class ModularityMeasure {
             LastAssignedGroup++;
             uncheckedGroups.add(currentGroupID);
             uncheckedGroups.add(LastAssignedGroup);
-        }else{
-            tracks_All = beforeChangeGroup;
+        } else {
+            for (Map.Entry<Integer, Track> entry:tracks_All.entrySet()) {
+                int ID = entry.getValue().getID();
+                Track tempTrack = tracks_All.get(ID);
+                tempTrack.setGroup(beforeChangeGroup.get(ID).getGroup());
+                tracks_All.put(ID, tempTrack);
+            }
         }
     }
 
