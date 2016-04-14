@@ -1,14 +1,51 @@
 package modularityCut;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.*;
 
 public class SocialGraph {
 
-    public Map<Integer, Track> readData() {
-        return new HashMap<>();
+    public String[] readDataSet(String theAddress) {
+        String[] lines = null;
+
+        try {
+            lines = Files.readAllLines(new File(theAddress)
+                    .toPath()).toArray(new String[0]);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return lines;
+    }
+
+    public Map<Integer, Track> interpretData(String[] theLines){
+        Scanner scanner;
+        Map<Integer, Track> tracks = new HashMap<>();
+
+        int frame;
+        int x, y, ID;
+        for (String line : theLines) {
+            scanner = new Scanner(line);
+            scanner.nextInt();
+            frame = scanner.nextInt();
+            ID = scanner.nextInt();
+            x = scanner.nextInt();
+            y = scanner.nextInt();
+
+            if (!tracks.containsKey(ID)) {
+                Tracks2D track2D = new Tracks2D(ID, 0);
+                track2D.addPointData(new Point2D(x, y, frame));
+                tracks.put(ID, track2D);
+            } else {
+                Track track2D = tracks.get(ID);
+                track2D.addPointData(new Point2D(x, y, frame));
+                tracks.put(ID, track2D);
+            }
+        }
+
+        return tracks;
     }
 
     public ArrayList<Track> convertToList(Map<Integer, Track> tracks) {
@@ -32,6 +69,8 @@ public class SocialGraph {
             for (int j = 0; j < sizeOfAdjMatrix; j++) {
 
                 if(i == j)
+                    // check to see if self similarity = 0 has any effects.
+                    //AdjMatrix[i][j] = 0;
                     AdjMatrix[i][j] = 1;
                 else if (AdjMatrix[i][j] == 0 && haveOverlap(tracks.get(i), tracks.get(j))) {
 
@@ -76,7 +115,13 @@ public class SocialGraph {
         }
 
         // weight according to the paper
-        return Math.exp( -1 * upperDivision / (2 * getVariance(distances)));
+        //return Math.exp( -1 * upperDivision / (2 * getVariance(distances)));
+
+        // check if -1 has wrong effects : it took forever to complete
+        //return Math.exp(upperDivision / (2 * getVariance(distances)));
+
+        //check if variance has wrong effect
+        return Math.exp(-1 * upperDivision);
     }
 
     private double getMean(List<Double> data) {

@@ -7,8 +7,13 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args){
-        MCT_Challenge_Data mctData = new MCT_Challenge_Data();
-        ModularityMeasure modularityMeasure = new ModularityMeasure( mctData.readData());
+        SocialGraph data1Cam1 = new SocialGraph();
+        String address = "MCT_Challenge//annotation//Dataset1//Cam1.dat";
+
+        ModularityMeasure modularityMeasure = new ModularityMeasure(
+                data1Cam1.interpretData(
+                        data1Cam1.readDataSet(address)));
+
         ArrayList<Matrix> structure = modularityMeasure.findCommunityStructure();
 
         Matrix LastGrouping = structure.get(structure.size()-1);
