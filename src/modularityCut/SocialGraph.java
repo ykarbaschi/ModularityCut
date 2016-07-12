@@ -71,7 +71,8 @@ public class SocialGraph {
                 if(i == j)
                     // check to see if self similarity = 0 has any effects.
                     //AdjMatrix[i][j] = 0;
-                    AdjMatrix[i][j] = 1;
+                    //AdjMatrix[i][j] = 1;
+                    AdjMatrix[i][j] = Math.exp(1);
                 else if (AdjMatrix[i][j] == 0 && haveOverlap(tracks.get(i), tracks.get(j))) {
 
                     AdjMatrix[i][j] = calculateWeight(tracks.get(i), tracks.get(j));
@@ -114,14 +115,17 @@ public class SocialGraph {
             }
         }
 
-        // weight according to the paper
-        //return Math.exp( -1 * upperDivision / (2 * getVariance(distances)));
+        // weight according to the paper : Monitoring, Recognizing and Discovering Social Networks
+        //return Math.exp( -1 * (upperDivision / (2 * getVariance(distances))));
+
+        // weight according to the paper : Detection of Human Groups in Videos
+        return Math.exp( 1 - (upperDivision / (distances.size() * )));
 
         // check if -1 has wrong effects : it took forever to complete
         //return Math.exp(upperDivision / (2 * getVariance(distances)));
 
         //check if variance has wrong effect
-        return Math.exp(-1 * upperDivision);
+        //return Math.exp(-1 * upperDivision);
     }
 
     private double getMean(List<Double> data) {

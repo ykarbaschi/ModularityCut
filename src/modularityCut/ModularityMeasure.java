@@ -100,6 +100,7 @@ public class ModularityMeasure {
         for (Map.Entry<Integer, Track> entry:tracks_All.entrySet())
             beforeChangeGroup.put(entry.getKey(), new Tracks2D(entry.getValue().getID(), entry.getValue().getGroup()));
 
+        //This didn't work:
         //Map<Integer, Track> beforeChangeGroup = new HashMap<>();
         //beforeChangeGroup.putAll(tracks_All);
 
