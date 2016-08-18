@@ -20,7 +20,7 @@ public class SocialGraph {
         return lines;
     }
 
-    public Map<Integer, Track> interpretData(String[] theLines){
+    public Map<Integer, Track> interpretDataMCTChallenge(String[] theLines){
         Scanner scanner;
         Map<Integer, Track> tracks = new HashMap<>();
 
@@ -29,6 +29,33 @@ public class SocialGraph {
         for (String line : theLines) {
             scanner = new Scanner(line);
             scanner.nextInt();
+            frame = scanner.nextInt();
+            ID = scanner.nextInt();
+            x = scanner.nextInt();
+            y = scanner.nextInt();
+
+            if (!tracks.containsKey(ID)) {
+                Tracks2D track2D = new Tracks2D(ID, 0);
+                track2D.addPointData(new Point2D(x, y, frame));
+                tracks.put(ID, track2D);
+            } else {
+                Track track2D = tracks.get(ID);
+                track2D.addPointData(new Point2D(x, y, frame));
+                tracks.put(ID, track2D);
+            }
+        }
+
+        return tracks;
+    }
+
+    public Map<Integer, Track> interpretDataPETS(String[] theLines){
+        Scanner scanner;
+        Map<Integer, Track> tracks = new HashMap<>();
+
+        int frame;
+        int x, y, ID;
+        for (String line : theLines) {
+            scanner = new Scanner(line).useDelimiter(",");
             frame = scanner.nextInt();
             ID = scanner.nextInt();
             x = scanner.nextInt();
@@ -117,9 +144,10 @@ public class SocialGraph {
 
         // weight according to the paper : Monitoring, Recognizing and Discovering Social Networks
         //return Math.exp( -1 * (upperDivision / (2 * getVariance(distances))));
+        return Math.exp( 1- (upperDivision / (2 * getVariance(distances))));
 
         // weight according to the paper : Detection of Human Groups in Videos
-        return Math.exp( 1 - (upperDivision / (distances.size() * )));
+        //return Math.exp( 1 - (upperDivision / (distances.size())));
 
         // check if -1 has wrong effects : it took forever to complete
         //return Math.exp(upperDivision / (2 * getVariance(distances)));
