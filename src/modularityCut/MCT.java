@@ -8,7 +8,7 @@ public class MCT {
 
     public static void main(String[] args){
         SocialGraph data1Cam1 = new SocialGraph();
-        String address = "MCT_Challenge//annotation//Dataset1//Cam1.dat";
+        String address = "DataSets//MCT_Challenge//annotation//Dataset1//Cam1.dat";
 
         ModularityMeasure modularityMeasure = new ModularityMeasure(
                 data1Cam1.interpretDataMCTChallenge(

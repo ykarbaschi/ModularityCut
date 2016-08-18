@@ -28,7 +28,9 @@ public class Tracks2D implements Track {
         double diffOfYs = Math.pow(this.getPointData(indexOfFirst).getY() -
                 secondTrack.getPointData(indexOfSecond).getY(), 2);
 
-        return Math.sqrt(diffOfXs + diffOfYs);
+        //I spent 3 weeks then I figured out I don't need to sqrt the distances! Shit!
+        //return Math.sqrt(diffOfXs + diffOfYs);
+        return diffOfXs + diffOfYs;
     }
 
     @Override

@@ -8,7 +8,7 @@ public class PETSDataSet {
 
     public static void main(String[] args){
         SocialGraph PETS_S2L1 = new SocialGraph();
-        String address = "PETS09-S2L1//gt.txt";
+        String address = "DataSets//PETS09-S2L1//gt.txt";
 
         ModularityMeasure modularityMeasure = new ModularityMeasure(
                 PETS_S2L1.interpretDataPETS(
