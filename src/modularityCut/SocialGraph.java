@@ -48,7 +48,7 @@ public class SocialGraph {
         return tracks;
     }
 
-    public Map<Integer, Track> interpretDataPETS(String[] theLines){
+    public Map<Integer, Track> interpretDataMOTChallenge(String[] theLines){
         Scanner scanner;
         Map<Integer, Track> tracks = new HashMap<>();
 

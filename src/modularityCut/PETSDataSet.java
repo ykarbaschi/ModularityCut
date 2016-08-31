@@ -11,7 +11,7 @@ public class PETSDataSet {
         String address = "DataSets//PETS09-S2L1//gt.txt";
 
         ModularityMeasure modularityMeasure = new ModularityMeasure(
-                PETS_S2L1.interpretDataPETS(
+                PETS_S2L1.interpretDataMOTChallenge(
                         PETS_S2L1.readDataSet(address)));
 
         ArrayList<Matrix> structure = modularityMeasure.findCommunityStructure();
