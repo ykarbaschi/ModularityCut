@@ -29,6 +29,8 @@ public class Tracks2D implements Track {
                 secondTrack.getPointData(indexOfSecond).getY(), 2);
 
         //I spent 3 weeks then I figured out I don't need to sqrt the distances! Shit!
+        // And wasted more time to test dozens of other formulas.
+        // PAY MORE ATTENTION TO IMPLEMENTING FORMULAS
         //return Math.sqrt(diffOfXs + diffOfYs);
         return diffOfXs + diffOfYs;
     }

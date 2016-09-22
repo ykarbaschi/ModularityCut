@@ -16,15 +16,20 @@ public class MCT {
 
         ArrayList<Matrix> structure = modularityMeasure.findCommunityStructure();
 
-        Matrix LastGrouping = structure.get(structure.size()-1);
+        //Matrix LastGrouping = structure.get(structure.size()-1);
 
-        for (int i = 0; i < LastGrouping.getColumnDimension(); i++) {
-            System.out.println("Group " + i + " Has:");
-            for (int j = 0; j < LastGrouping.getRowDimension(); j++) {
-                if (LastGrouping.get(j, i) == 1 )
-                    System.out.print(j + ", ");
+        for (int i = 0; i < structure.size(); i++) {
+            System.out.println("Layer" + i + ":");
+            Matrix GroupInfo = structure.get(i);
+
+            for (int j = 0; j < GroupInfo.getColumnDimension(); j++) {
+                System.out.println("Group " + j + " Has:");
+                for (int k = 0; k < GroupInfo.getRowDimension(); k++) {
+                    if (GroupInfo.get(k, j) == 1)
+                        System.out.print(k + ", ");
+                }
+                System.out.println();
             }
-            System.out.println();
         }
     }
 }
