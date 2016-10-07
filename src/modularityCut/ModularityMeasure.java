@@ -3,6 +3,7 @@ package modularityCut;
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 
+import java.io.*;
 import java.util.*;
 
 public class ModularityMeasure {
@@ -49,7 +50,8 @@ public class ModularityMeasure {
 
     public ArrayList<Matrix> findCommunityStructure() {
 
-        double[][] AdjMatrix = socialGraph.createAdjacencyMatrix(socialGraph.convertToList(tracks_All));
+        double[][] AdjMatrix = socialGraph.calcAdjPositionMatrix(socialGraph.convertToList(tracks_All));
+
         List<Double> totalConnectionStrength = socialGraph.calculateTotalConnectionStrength(AdjMatrix);
         double totalMatrixStrength = socialGraph.calculateTotalMatrixStrength(AdjMatrix);
         double[][] modularity_All = socialGraph.calculateModularityMatrix(
@@ -84,7 +86,8 @@ public class ModularityMeasure {
 
     private void evaluateDivideSubGraph(Matrix modularityMatrix_all, Map<Integer, Track> tracksWithCurrentID) {
 
-        double[][] AdjMatrix = socialGraph.createAdjacencyMatrix(socialGraph.convertToList(tracksWithCurrentID));
+        double[][] AdjMatrix = socialGraph.calcAdjPositionMatrix(socialGraph.convertToList(tracksWithCurrentID));
+
         List<Double> totalConnectionStrength = socialGraph.calculateTotalConnectionStrength(AdjMatrix);
         double totalMatrixStrength = socialGraph.calculateTotalMatrixStrength(AdjMatrix);
         double[][] modularity = socialGraph.calculateModularityMatrix(
@@ -166,5 +169,31 @@ public class ModularityMeasure {
                 indexOfMaximum, indexOfMaximum);
 
         return calculateLabelVector(dominantEigenVector);
+    }
+
+    public void ExportCommunity(List<Matrix> structure){
+
+        Matrix LastGrouping = structure.get(structure.size()-1);
+
+        Writer groupWriter = null;
+        try {
+            groupWriter = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream("Groups.txt"), "utf-8"));
+
+            for (int j = 0; j < LastGrouping.getColumnDimension(); j++) {
+                for (int k = 0; k < LastGrouping.getRowDimension(); k++) {
+                    if (LastGrouping.get(k, j) == 1)
+                        groupWriter.write(k + " ");
+                }
+                groupWriter.write("\n");
+            }
+
+        } catch (IOException e) {
+        } finally {
+            try {
+                groupWriter.close();
+            } catch (Exception ex) {
+            }
+        }
     }
 }

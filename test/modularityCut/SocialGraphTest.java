@@ -67,7 +67,7 @@ public class SocialGraphTest {
         tracks.add(trackB);
         tracks.add(trackC);
         tracks.add(trackD);
-        double[][] adjMatrix = socialGraph.createAdjacencyMatrix(tracks);
+        double[][] adjMatrix = socialGraph.calcAdjPositionMatrix(tracks);
 
         for (double[] weightRow : adjMatrix)
             for (double weight : weightRow)
@@ -83,7 +83,7 @@ public class SocialGraphTest {
 
         ArrayList<Track> tracks = new ArrayList();
         tracks.add(trackA);
-        double[][] matrix = socialGraph.createAdjacencyMatrix(tracks);
+        double[][] matrix = socialGraph.calcAdjPositionMatrix(tracks);
         assertEquals(1, matrix[0][0], 0);
     }
 
@@ -91,7 +91,7 @@ public class SocialGraphTest {
     public void sendEmptyListToCalculateAdjacencyMatrix() {
         ArrayList<Track> tracks = new ArrayList();
         try {
-            socialGraph.createAdjacencyMatrix(tracks);
+            socialGraph.calcAdjPositionMatrix(tracks);
             fail("List is Empty");
         } catch (Exception e) {
         }
@@ -124,7 +124,7 @@ public class SocialGraphTest {
         tracks.add(trackB);
         tracks.add(trackC);
         tracks.add(trackD);
-        double[][] adjMatrix = socialGraph.createAdjacencyMatrix(tracks);
+        double[][] adjMatrix = socialGraph.calcAdjPositionMatrix(tracks);
 
         List<Double> totalConnectionStrength = socialGraph.calculateTotalConnectionStrength(adjMatrix);
         assertEquals(4, totalConnectionStrength.size());
@@ -156,7 +156,7 @@ public class SocialGraphTest {
         tracks.add(trackB);
         tracks.add(trackC);
         tracks.add(trackD);
-        double[][] adjMatrix = socialGraph.createAdjacencyMatrix(tracks);
+        double[][] adjMatrix = socialGraph.calcAdjPositionMatrix(tracks);
 
         double totalMatrixStrength = socialGraph.calculateTotalMatrixStrength(adjMatrix);
 
@@ -189,7 +189,7 @@ public class SocialGraphTest {
         tracks.add(trackB);
         tracks.add(trackC);
         tracks.add(trackD);
-        double[][] adjMatrix = socialGraph.createAdjacencyMatrix(tracks);
+        double[][] adjMatrix = socialGraph.calcAdjPositionMatrix(tracks);
 
         List<Double> totalConnectionStrength = socialGraph.calculateTotalConnectionStrength(adjMatrix);
         double totalMatrixStrength = socialGraph.calculateTotalMatrixStrength(adjMatrix);
