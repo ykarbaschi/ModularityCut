@@ -16,10 +16,15 @@ public class PETSDataSet {
 
         ModularityMeasure modularityMeasure = new ModularityMeasure( AllTracks);
 
-        ArrayList<Matrix> structure = modularityMeasure.findCommunityStructure();
+        boolean useDirVelocity = true;
 
-        PETS_S2L1.ExportAdjMatrix(PETS_S2L1.calcAdjPositionMatrix(
-                PETS_S2L1.convertToList(AllTracks)));
+        ArrayList<Matrix> structure = modularityMeasure.findCommunityStructure(useDirVelocity);
+
+        /*PETS_S2L1.ExportAdjMatrix(PETS_S2L1.calcAdjPositionMatrix(
+                PETS_S2L1.convertToList(AllTracks)));*/
+
+        PETS_S2L1.ExportAdjMatrix(PETS_S2L1.createAdjMatrix(
+                PETS_S2L1.convertToList(AllTracks), useDirVelocity));
 
         modularityMeasure.ExportCommunity(structure);
     }

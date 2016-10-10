@@ -4,6 +4,8 @@ clc;
 ReadS2L1; 
 ReadEdgeData;
 ReadGroupingData;
+groupColors = rand([size(Groups,1) 3]);
+
 workingDir = pwd;
 
 mkdir(workingDir,'images');
@@ -27,6 +29,8 @@ for ii=1:795
     currentimage = imread(fullfile(workingDir,'view_001',currentfilename));
     %while hasFrame(shuttleVideo)
     personsInThisFrame = S2L1(ismember(S2L1(:,1),ii),:);
+    positions = personsInThisFrame(1:end, 3:4);
+    values = personsInThisFrame(1:end, 2)';
     
     if(~isempty(personsInThisFrame))
         % if have 10000 frame two next lin should be %05d
@@ -48,18 +52,30 @@ for ii=1:795
                 Y2 = personsInThisFrame(P2, 4);
                 
                 if (~isempty(P1) && ~isempty(P2))
+                    [row1 ~] = find(Groups(:,:)== edge(j , 1));
+                    color1 = groupColors(row1, :);
+                    
+                    [row2 ~] = find(Groups(:,:)== edge(j , 2));
+                    
+                    if (row1 ~= row2)
+                        color1 = [0 0 0];
+                    end
+                    
+                    color1 = uint16(color1 * 255);
+                    
                     weight = edge(j ,3);
                     bin = maxWeight / 5.0;
-                    if(weight < bin)lineWidth = 1;
-                    elseif ( bin < weight && weight < 2 * bin) lineWidth = 1; opacity = 0.1;
-                    elseif ( 2 * bin < weight && weight < 3 * bin) lineWidth = 3;opacity = 0.5;
-                    elseif ( 3 * bin < weight && weight < 4 * bin) lineWidth = 7;opacity = 1;
-                    else lineWidth = 15;opacity = 1;
+                    if(weight < bin)lineWidth = 1; opacity = 0.1;
+                    elseif ( bin < weight && weight < 2 * bin) lineWidth = 5; opacity = 0.1;
+                    elseif ( 2 * bin < weight && weight < 3 * bin) lineWidth = 8;opacity = 1;
+                    elseif ( 3 * bin < weight && weight < 4 * bin) lineWidth = 14;opacity = 1;
+                    else lineWidth = 20;opacity = 1;
                     end
-                    currentimage = insertShape(currentimage, 'Line',[X1 Y1 X2 Y2], 'LineWidth', lineWidth, 'Opacity', opacity);
+                    currentimage = insertShape(currentimage, 'Line',[X1 Y1 X2 Y2],...
+                        'LineWidth', lineWidth, 'Opacity', opacity, 'Color', color1);
                 end
             end
-            
+            currentimage = insertText(currentimage, positions, values);
             filename = [sprintf('%06d',ii) '.jpg'];
             fullname = fullfile(workingDir,'images',filename);
             imwrite(currentimage,fullname)  ;  % Write out to a JPEG file (img1.jpg, img2.jpg, etc.)
@@ -77,7 +93,7 @@ end
 imageNames = dir(fullfile(workingDir,'images','*.jpg'));
 imageNames = {imageNames.name}';
 
-outputVideo = VideoWriter(fullfile(workingDir,'Groups_PETS.avi'));
+outputVideo = VideoWriter(fullfile(workingDir,'Groups_PETS_DirVel.avi'));
 outputVideo.FrameRate = 15;
 open(outputVideo);
 

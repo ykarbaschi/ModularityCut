@@ -48,9 +48,9 @@ public class ModularityMeasure {
         return IndexOfMax;
     }
 
-    public ArrayList<Matrix> findCommunityStructure() {
+    public ArrayList<Matrix> findCommunityStructure(boolean dirVelocity) {
 
-        double[][] AdjMatrix = socialGraph.calcAdjPositionMatrix(socialGraph.convertToList(tracks_All));
+        double[][] AdjMatrix = socialGraph.createAdjMatrix(socialGraph.convertToList(tracks_All), dirVelocity);
 
         List<Double> totalConnectionStrength = socialGraph.calculateTotalConnectionStrength(AdjMatrix);
         double totalMatrixStrength = socialGraph.calculateTotalMatrixStrength(AdjMatrix);
@@ -78,15 +78,15 @@ public class ModularityMeasure {
                     .forEach(entry -> tracksWithCurrentID.put(entry.getKey(), entry.getValue()));
 
             if (tracksWithCurrentID.size() > 1)
-                evaluateDivideSubGraph(modularityMatrix_All, tracksWithCurrentID);
+                evaluateDivideSubGraph(modularityMatrix_All, tracksWithCurrentID, dirVelocity);
         }
 
         return All_S;
     }
 
-    private void evaluateDivideSubGraph(Matrix modularityMatrix_all, Map<Integer, Track> tracksWithCurrentID) {
+    private void evaluateDivideSubGraph(Matrix modularityMatrix_all, Map<Integer, Track> tracksWithCurrentID, boolean dirVelocity) {
 
-        double[][] AdjMatrix = socialGraph.calcAdjPositionMatrix(socialGraph.convertToList(tracksWithCurrentID));
+        double[][] AdjMatrix = socialGraph.createAdjMatrix(socialGraph.convertToList(tracksWithCurrentID), dirVelocity);
 
         List<Double> totalConnectionStrength = socialGraph.calculateTotalConnectionStrength(AdjMatrix);
         double totalMatrixStrength = socialGraph.calculateTotalMatrixStrength(AdjMatrix);

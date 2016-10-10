@@ -3,7 +3,9 @@ clc;
 
 ReadCam1Annotation;
 ReadEdgeData;
-ReadGroupingData;
+ReadLargeGroupingData;
+groupColors = rand([size(Groups,1) 3]);
+
 workingDir = pwd;
 shuttleVideo = VideoReader('Cam1.avi');
 
@@ -18,9 +20,11 @@ Edges(indices, :) = [];
 maxWeight = max(Edges(:, 3));
 
 %for n=1:2000
-ii = 0;
+ii = 1;
 while hasFrame(shuttleVideo)
     personsInThisFrame = Cam1(ismember(Cam1(:,2),ii),:);
+    positions = personsInThisFrame(1:end, 4:5);
+    values = personsInThisFrame(1:end, 3)';
     img = readFrame(shuttleVideo);
     
     if(~isempty(personsInThisFrame))
@@ -43,18 +47,30 @@ while hasFrame(shuttleVideo)
                 Y2 = personsInThisFrame(P2, 5);
                 
                 if (~isempty(P1) && ~isempty(P2))
+                    [row1 ~] = find(Groups(:,:)== edge(j , 1));
+                    color1 = groupColors(row1, :);
+                    
+                    [row2 ~] = find(Groups(:,:)== edge(j , 2));
+                    
+                    if (row1 ~= row2)
+                        color1 = [0 0 0];
+                    end
+                    
+                    color1 = uint16(color1 * 255);
+                    
                     weight = edge(j ,3);
                     bin = maxWeight / 5.0;
-                    if(weight < bin)lineWidth = 1;
+                    if(weight < bin)lineWidth = 1; opacity = 0.1;
                     elseif ( bin < weight && weight < 2 * bin) lineWidth = 1; opacity = 0.1;
                     elseif ( 2 * bin < weight && weight < 3 * bin) lineWidth = 3;opacity = 0.5;
                     elseif ( 3 * bin < weight && weight < 4 * bin) lineWidth = 7;opacity = 1;
                     else lineWidth = 15;opacity = 1;
                     end
-                    img = insertShape(img, 'Line',[X1 Y1 X2 Y2], 'LineWidth', lineWidth, 'Opacity', opacity);
+                    img = insertShape(img, 'Line',[X1 Y1 X2 Y2],...
+                        'LineWidth', lineWidth, 'Opacity', opacity, 'Color', color1);
                 end
             end
-            
+            img = insertText(img, positions, values);
             filename = [sprintf('%06d',ii) '.jpg'];
             fullname = fullfile(workingDir,'images',filename);
             imwrite(img,fullname)  ;  % Write out to a JPEG file (img1.jpg, img2.jpg, etc.)
@@ -75,7 +91,7 @@ end
 imageNames = dir(fullfile(workingDir,'images','*.jpg'));
 imageNames = {imageNames.name}';
 
-outputVideo = VideoWriter(fullfile(workingDir,'groups.avi'));
+outputVideo = VideoWriter(fullfile(workingDir,'Groups_MCT_DirVel.avi'));
 outputVideo.FrameRate = shuttleVideo.FrameRate;
 open(outputVideo);
 

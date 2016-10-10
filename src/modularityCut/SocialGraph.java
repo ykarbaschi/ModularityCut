@@ -111,12 +111,24 @@ public class SocialGraph {
         return AdjMatrix;
     }
 
-    public double[][] createAdjMatrixPosVelocityDir(List<Track> tracks){
+    public double[][] createAdjMatrix(List<Track> tracks, boolean dirVelocity){
         if (tracks.size() == 0) throw new IllegalArgumentException("Map is Empty, Couldn't create Adj Matrix");
 
         double[][] posAdjMatrix = calcAdjPositionMatrix(tracks);
-        double[][] velocityAdjMatrix = calcAdjVelocityMatrix(tracks);
-        double[][] directionAdjMatrix = calcAdjDirMatrix(tracks);
+
+        double[][] velocityAdjMatrix = new double[tracks.size()][tracks.size()];
+        double[][] directionAdjMatrix = new double[tracks.size()][tracks.size()];;
+        if(dirVelocity) {
+            velocityAdjMatrix = calcAdjVelocityMatrix(tracks);
+            directionAdjMatrix = calcAdjDirMatrix(tracks);
+        }else{
+            for (int i = 0; i < tracks.size(); i++) {
+                for (int j = 0; j < tracks.size(); j++) {
+                    velocityAdjMatrix[i][j] = 1;
+                    directionAdjMatrix[i][j] = 1;
+                }
+            }
+        }
 
         double[] avgVelocity = calcAvgVelocity(tracks);
 

@@ -17,13 +17,15 @@ public class MCT {
 
         ModularityMeasure modularityMeasure = new ModularityMeasure(AllTracks);
 
-        data1Cam1.ExportAdjMatrix(data1Cam1.calcAdjPositionMatrix(
-               data1Cam1.convertToList(AllTracks)));
+        boolean useDirVelocity = true;
 
-       /* data1Cam1.ExportAdjMatrix(data1Cam1.createAdjMatrixPosVelocityDir(
+        data1Cam1.ExportAdjMatrix(data1Cam1.createAdjMatrix(
+               data1Cam1.convertToList(AllTracks), useDirVelocity));
+
+       /* data1Cam1.ExportAdjMatrix(data1Cam1.createAdjMatrix(
                       data1Cam1.convertToList(AllTracks)));*/
 
-        ArrayList<Matrix> structure = modularityMeasure.findCommunityStructure();
+        ArrayList<Matrix> structure = modularityMeasure.findCommunityStructure(useDirVelocity);
 
         modularityMeasure.ExportCommunity(structure);
 
