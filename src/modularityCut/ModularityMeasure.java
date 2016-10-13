@@ -8,7 +8,7 @@ import java.util.*;
 
 public class ModularityMeasure {
 
-    SocialGraph socialGraph = new SocialGraph();
+    SocialGraph socialGraph;
     private static Matrix bigS;
     ArrayList<Matrix> All_S;
     private static double Q_max;

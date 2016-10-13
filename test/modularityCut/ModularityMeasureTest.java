@@ -16,7 +16,7 @@ public class ModularityMeasureTest {
     @Before
     public void setUp() {
 
-        SocialGraph socialGraph = new SocialGraph();
+        SocialGraph socialGraph = new SocialGraph(4,6,7);
         Tracks2D trackA = new Tracks2D(0, 0);
         trackA.addPointData(new Point2D(1, 1, 1));
         trackA.addPointData(new Point2D(2, 2, 2));

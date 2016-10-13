@@ -14,7 +14,7 @@ public class SocialGraphTest {
 
     @Before
     public void setUp() {
-        socialGraph = new SocialGraph();
+        socialGraph = new SocialGraph(5,6,7);
     }
 
     @Test

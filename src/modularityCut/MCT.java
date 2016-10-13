@@ -9,25 +9,36 @@ import java.util.Map;
 public class MCT {
 
     public static void main(String[] args){
-        SocialGraph data1Cam1 = new SocialGraph();
-        String address = "DataSets//MCT_Challenge//annotation//Dataset1//Cam1.dat";
+        DataSet dataSet = new DataSet("DataSets//MCT_Challenge//annotation//Dataset1//Cam1.dat");
+        Map<Integer, Track> AllTracks = dataSet.interpretDataMCTChallenge(
+                dataSet.readDataSet());
 
-        Map<Integer, Track> AllTracks = data1Cam1.interpretDataMCTChallenge(
-                data1Cam1.readDataSet(address));
+        // window size in frames
+        int window = 24000;
 
-        ModularityMeasure modularityMeasure = new ModularityMeasure(AllTracks);
+        SocialGraph socialGraphMCT = new SocialGraph(window, dataSet.startFrameNumber, dataSet.endFrameNumber);
+
+        //ModularityMeasure modularityMeasure = new ModularityMeasure(AllTracks);
 
         boolean useDirVelocity = true;
 
-        data1Cam1.ExportAdjMatrix(data1Cam1.createAdjMatrix(
-               data1Cam1.convertToList(AllTracks), useDirVelocity));
+        List<Matrix> result = socialGraphMCT.calcAllAdjMatrix(socialGraphMCT.convertToList(AllTracks),
+                useDirVelocity);
+
+
+        System.out.println(result);
+
+        /*socialGraphMCT.ExportAdjMatrix(socialGraphMCT.createAdjMatrix(
+               socialGraphMCT.convertToList(AllTracks),
+                dataSet.startFrameNumber, dataSet.endFrameNumber,
+                useDirVelocity));*/
 
        /* data1Cam1.ExportAdjMatrix(data1Cam1.createAdjMatrix(
                       data1Cam1.convertToList(AllTracks)));*/
 
-        ArrayList<Matrix> structure = modularityMeasure.findCommunityStructure(useDirVelocity);
+        //ArrayList<Matrix> structure = modularityMeasure.findCommunityStructure(useDirVelocity);
 
-        modularityMeasure.ExportCommunity(structure);
+        //modularityMeasure.ExportCommunity(structure);
 
     }
 }
