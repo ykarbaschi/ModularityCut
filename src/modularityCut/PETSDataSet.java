@@ -8,24 +8,21 @@ import java.util.Map;
 public class PETSDataSet {
 
     public static void main(String[] args){
-        /*SocialGraph PETS_S2L1 = new SocialGraph();
-        String address = "DataSets//PETS09-S2L1//gt.txt";
+        DataSet dataSet = new DataSet("DataSets//PETS09-S2L1//gt.txt");
 
-        Map<Integer, Track> AllTracks = PETS_S2L1.interpretDataMOTChallenge(
-                PETS_S2L1.readDataSet(address));
+        Map<Integer, Track> AllTracks = dataSet.interpretDataMOTChallenge(
+                dataSet.readDataSet());
 
-        ModularityMeasure modularityMeasure = new ModularityMeasure( AllTracks);
-
+        // window size in frames
+        int window = 100;
         boolean useDirVelocity = true;
 
-        ArrayList<Matrix> structure = modularityMeasure.findCommunityStructure(useDirVelocity);
+        SocialGraph socialGraphMCT = new SocialGraph(window, dataSet.startFrameNumber, dataSet.endFrameNumber);
 
-        PETS_S2L1.ExportAdjMatrix(PETS_S2L1.calcAdjPositionMatrix(
-                PETS_S2L1.convertToList(AllTracks)));
+        socialGraphMCT.exportAdjMatrixWithWindow(
+                socialGraphMCT.calcAllAdjMatrix(
+                        socialGraphMCT.convertToList(AllTracks), useDirVelocity));
 
-        PETS_S2L1.ExportAdjMatrix(PETS_S2L1.createAdjMatrix(
-                PETS_S2L1.convertToList(AllTracks), useDirVelocity));
 
-        modularityMeasure.ExportCommunity(structure);*/
     }
 }

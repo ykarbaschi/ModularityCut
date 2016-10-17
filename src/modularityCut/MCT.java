@@ -14,7 +14,7 @@ public class MCT {
                 dataSet.readDataSet());
 
         // window size in frames
-        int window = 24000;
+        int window = 5;
 
         SocialGraph socialGraphMCT = new SocialGraph(window, dataSet.startFrameNumber, dataSet.endFrameNumber);
 
@@ -22,11 +22,10 @@ public class MCT {
 
         boolean useDirVelocity = true;
 
-        List<Matrix> result = socialGraphMCT.calcAllAdjMatrix(socialGraphMCT.convertToList(AllTracks),
-                useDirVelocity);
 
-
-        System.out.println(result);
+        socialGraphMCT.exportAdjMatrixWithWindow(
+                socialGraphMCT.calcAllAdjMatrix(
+                        socialGraphMCT.convertToList(AllTracks), useDirVelocity));
 
         /*socialGraphMCT.ExportAdjMatrix(socialGraphMCT.createAdjMatrix(
                socialGraphMCT.convertToList(AllTracks),

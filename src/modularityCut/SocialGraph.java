@@ -18,7 +18,40 @@ public class SocialGraph {
         lastFrame = theEnd;
     }
 
-    public ArrayList calcAllAdjMatrix(List<Track> tracks, boolean dirVelocity) {
+    public void exportAdjMatrixWithWindow(List<TimeFrameInfo> windowInformation) {
+
+        String nameOfDir = String.format("AdjMatrices/Window%d", frameWindow);
+        File theDir = new File(nameOfDir);
+        theDir.mkdirs();
+
+        for (TimeFrameInfo theWindowInfo : windowInformation) {
+
+            Writer writer = null;
+            try {
+                String nameOfFile = String.format(nameOfDir + "/WindowInfo_%d_%d.txt",
+                        theWindowInfo.start, theWindowInfo.end);
+                writer = new BufferedWriter(new OutputStreamWriter(
+                        new FileOutputStream(nameOfFile), "utf-8"));
+
+                writer.write(theWindowInfo.start + " " + theWindowInfo.end + "\n");
+
+                for (int i = 0; i < theWindowInfo.Adj.length; i++) {
+                    for (int j = 0; j < theWindowInfo.Adj.length; j++) {
+                        writer.write(theWindowInfo.Adj[i][j] + " ");
+                    }
+                    writer.write("\n");
+                }
+            } catch (IOException e) {
+            } finally {
+                try {
+                    writer.close();
+                } catch (Exception ex) {
+                }
+            }
+        }
+    }
+
+    public ArrayList<TimeFrameInfo> calcAllAdjMatrix(List<Track> tracks, boolean dirVelocity) {
 
         ArrayList<TimeFrameInfo> result = new ArrayList<>();
 
@@ -59,9 +92,9 @@ public class SocialGraph {
             for (int j = 0; j < sizeOfAdjMatrix; j++) {
                 if (i == j)
                     // check to see if self similarity = 0 has any effects.
-                    //AdjMatrix[i][j] = 0;
+                    AdjMatrix[i][j] = 0;
                     //AdjMatrix[i][j] = 1;
-                    AdjMatrix[i][j] = Math.exp(1);
+                    //AdjMatrix[i][j] = Math.exp(1);
                 else if (AdjMatrix[i][j] == 0 && haveOverlap(tracks.get(i), tracks.get(j))) {
                     int[] commonFrames = calculateCommonFrames(tracks.get(i), tracks.get(j));
                     if (haveOverlapWithStartFrame(commonFrames, startFrame, endFrame)) {
@@ -121,7 +154,7 @@ public class SocialGraph {
         double[] avgVelocity = calcAvgVelocity(tracks, startFrame, endFrame);
 
         //double Cv = calcCv(avgVelocity);
-        double Cv = 0.00001;
+        double Cv = 0;
 
         int sizeOfAdjMatrix = tracks.size();
         double[][] AdjMatrix = new double[sizeOfAdjMatrix][sizeOfAdjMatrix];
@@ -129,7 +162,8 @@ public class SocialGraph {
         for (int i = 0; i < sizeOfAdjMatrix; i++) {
             for (int j = 0; j < sizeOfAdjMatrix; j++) {
 
-                if (i == j) AdjMatrix[i][j] = Math.exp(1) * Math.exp(1);
+                //if (i == j) AdjMatrix[i][j] = Math.exp(1) * Math.exp(1);
+                if (i == j) AdjMatrix[i][j] = 0;
                 else if (avgVelocity[i] > Cv && avgVelocity[j] > Cv && AdjMatrix[i][j] == 0) {
 
                     AdjMatrix[i][j] = posAdjMatrix[i][j] * velocityAdjMatrix[i][j] * directionAdjMatrix[i][j];
@@ -140,7 +174,6 @@ public class SocialGraph {
                     AdjMatrix[j][i] = AdjMatrix[i][j];
                 }
             }
-
         }
         return AdjMatrix;
     }
@@ -257,11 +290,11 @@ public class SocialGraph {
             if (haveOverlap(theTrack, fakeTrack)) {
                 int[] startStopFrame = calculateCommonFrames(theTrack, fakeTrack);
 
-                int indexOfStart = 0 , indexOfStop =0 ;
+                int indexOfStart = 0, indexOfStop = 0;
                 for (int j = 0; j < theTrack.length(); j++) {
-                    if(theTrack.getPointData(j).getFrame() == startStopFrame[0])
+                    if (theTrack.getPointData(j).getFrame() == startStopFrame[0])
                         indexOfStart = j;
-                    else if(theTrack.getPointData(j).getFrame() == startStopFrame[1])
+                    else if (theTrack.getPointData(j).getFrame() == startStopFrame[1])
                         indexOfStop = j;
                 }
 
@@ -289,7 +322,8 @@ public class SocialGraph {
 
         double[] avgVelocity = calcAvgVelocity(tracks, startFrame, endFrame);
 
-        double Cv = calcCv(avgVelocity);
+        //double Cv = calcCv(avgVelocity);
+        double Cv = 0.2;
 
         int sizeOfAdjMatrix = tracks.size();
         double[][] velocityAdjMatrix = new double[sizeOfAdjMatrix][sizeOfAdjMatrix];
@@ -298,11 +332,14 @@ public class SocialGraph {
             for (int j = 0; j < sizeOfAdjMatrix; j++) {
 
                 if (i == j)
-                    velocityAdjMatrix[i][j] = Math.exp(1);
+                    //velocityAdjMatrix[i][j] = Math.exp(1);
+                    velocityAdjMatrix[i][j] = 0;
                 else if (velocityAdjMatrix[i][j] == 0) {
-
-                    velocityAdjMatrix[i][j] = Math.exp(1 - (Math.abs(avgVelocity[i] - avgVelocity[j]) / Cv));
-                    velocityAdjMatrix[j][i] = velocityAdjMatrix[i][j];
+                    if(avgVelocity[i] == 0 || avgVelocity[j] == 0) velocityAdjMatrix[i][j] = 0;
+                    else {
+                        velocityAdjMatrix[i][j] = Math.exp(1 - (Math.abs(avgVelocity[i] - avgVelocity[j]) / Cv));
+                        velocityAdjMatrix[j][i] = velocityAdjMatrix[i][j];
+                    }
                 }
             }
         }
@@ -357,16 +394,16 @@ public class SocialGraph {
             if (haveOverlap(theTrack, fakeTrack)) {
                 int[] startStopFrame = calculateCommonFrames(theTrack, fakeTrack);
 
-                int indexOfStart = 0 , indexOfStop =0 ;
+                int indexOfStart = 0, indexOfStop = 0;
                 for (int j = 0; j < theTrack.length(); j++) {
-                    if(theTrack.getPointData(j).getFrame() == startStopFrame[0])
+                    if (theTrack.getPointData(j).getFrame() == startStopFrame[0])
                         indexOfStart = j;
-                    else if(theTrack.getPointData(j).getFrame() == startStopFrame[1])
+                    else if (theTrack.getPointData(j).getFrame() == startStopFrame[1])
                         indexOfStop = j;
                 }
 
                 velocityMatrix[i] = (theTrack.getDifferenceOfPosition(theTrack,
-                        indexOfStart, indexOfStop)) / (endFrame - startFrame);
+                        indexOfStart, indexOfStop)) / (startStopFrame[1] - startStopFrame[0]);
             } else
                 velocityMatrix[i] = 0;
         }
@@ -454,7 +491,7 @@ public class SocialGraph {
                     if (!seenStartFrame) {
                         result[0] = i;
                         seenStartFrame = true;
-                    }else {
+                    } else {
                         result[1] = i;
                         break;
                     }
