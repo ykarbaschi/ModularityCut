@@ -8,28 +8,48 @@ end
 figure;
 hold on;
 xlabels = [];
-ylabels = []
+ylabels = [];
 for i =1 : size(accumWeight, 1)
     for j = i +1 : size(accumWeight, 1)
         if accumWeight(i, j) ~= 0
             ylabels = [ylabels ; accumWeight(i, j)];
-            xlabels = [xlabels; {sprintf('%d-%d', i ,j)}];
             
+            if(typeOfIndex == 0)
+                xlabels = [xlabels; {sprintf('%d-%d', i-1 ,j-1)}];
+            else
+                xlabels = [xlabels; {sprintf('%d-%d', i ,j)}];
+            end
         end
     end
 end
 
-bar(ylabels);
-%set(gca, 'xticklabel', xlabels);
+Min = min(min(accumWeight));
+Max = max(max(accumWeight));
+
+ylabelsNorm = [];
+for i =1 : size(accumWeight, 1)
+    for j = i +1 : size(accumWeight, 1)
+        if accumWeight(i, j) ~= 0
+            ylabelsNorm = [ylabelsNorm ; (accumWeight(i, j) - Min)/(Max - Min)];
+        end
+    end
+end
+
+%h =bar(horzcat(ylabels, ylabelsNorm));
+%h = bar(ylabels);
+h = bar(ylabelsNorm);
+
+% colormap(summer(2));
+% grid on
+% l = cell(1,2);
+% l{1}='NON'; l{2}='Normalized';
+% legend(h,l);
 
 xt = [1:size(ylabels,1)]';
-yt = ylabels(:,1);
-text(xt, yt, xlabels, 'rotation', 90, 'Color', 'r');
+yt = ylabelsNorm(:,1);
+text(xt, yt, xlabels, 'rotation', 45, 'Color', 'r');
 
-% if (typeOfIndex == 0)
-%     title(sprintf('Weight for ID = %d, Time Window = %d frames', (Id -1), windowSize));
-% else
-%     title(sprintf('Similarity for ID = %d, Time Window = %d frames', Id, windowSize));
-% end
-% xlabel('IDs');
-% ylabel('Normalized Proxomity');
+%title(sprintf('Edge Weights, Window Size = %d', windowSize));
+title(sprintf('Normalized Edge Weights, Window Size = %d', windowSize));
+xlabel('Number Of Edges (labels show participating nodes)');
+ylabel('Normalized Proxomity');
