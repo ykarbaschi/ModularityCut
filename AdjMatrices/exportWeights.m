@@ -4,13 +4,15 @@ function exportWeights(weights, nameOfFile)
 fileName = sprintf('%s_Edges.csv', nameOfFile);
 fileID = fopen(fileName,'w');
 %fprintf(fileID, 'Source;Target;Type;Weight\n');
-fprintf(fileID, '"from","to","weight"\n');
+%fprintf(fileID, '"from","to","weight"\n');
+fprintf(fileID, '#source target weight\n');
 for i = 1 : size(weights, 1)
-    %for j = i + 1 : size(weights, 1)
-    for j = 1 : size(weights, 1)
+    for j = i + 1 : size(weights, 1)
+    %for j = 1 : size(weights, 1)
         if(weights(i ,j) ~= 0)
         %line = sprintf('%d;%d;Undirected;%f\n', i, j, weights(i ,j));
-        line = sprintf('"Node%02d","Node%02d",%f\n', i, j, weights(i ,j));
+        %line = sprintf('"Node%02d","Node%02d",%f\n', i, j, weights(i ,j));
+        line = sprintf('%d %d %f\n', i, j, weights(i ,j));
         fprintf(fileID,line);
         end
     end
